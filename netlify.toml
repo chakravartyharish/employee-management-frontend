@@ -1,0 +1,14 @@
+[build]
+  publish = "dist/employee-management-frontend"
+  command = "npm run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run start"
+  port = 4200
+  targetPort = 4200
+  publish = "dist/employee-management-frontend"

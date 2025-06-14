@@ -1,0 +1,52 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Checkout</h4>
+        </div>
+        <div class="card-body">
+          <div class="mb-4 text-center">
+            <h5>{{ productName }}</h5>
+            <p class="text-muted">Order Total: ${{ amount.toFixed(2) }}</p>
+          </div>
+          
+          <form (ngSubmit)="processPayment()">
+            <div class="mb-3">
+              <label for="cardNumber" class="form-label">Card Number</label>
+              <input type="text" class="form-control" id="cardNumber" placeholder="4242 4242 4242 4242" required>
+              <small class="text-muted">Use any 16 digit number (this is a mock)</small>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="expiry" class="form-label">Expiry Date</label>
+                <input type="text" class="form-control" id="expiry" placeholder="MM/YY" required>
+              </div>
+              <div class="col-md-6">
+                <label for="cvv" class="form-label">CVV</label>
+                <input type="text" class="form-control" id="cvv" placeholder="123" required>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="name" class="form-label">Name on Card</label>
+              <input type="text" class="form-control" id="name" placeholder="John Doe" required>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="loading">
+                <span *ngIf="!loading">Pay ${{ amount.toFixed(2) }}</span>
+                <span *ngIf="loading"><i class="fas fa-spinner fa-spin me-2"></i>Processing...</span>
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancel</button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center text-muted">
+          <small>This is a mock checkout page for demonstration purposes only</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

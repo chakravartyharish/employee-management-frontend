@@ -1,0 +1,35 @@
+<div class="container mt-4 mb-5">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="text-center">Featured Products</h2>
+    </div>
+  </div>
+  
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <div class="col" *ngFor="let product of products">
+      <div class="card h-100 product-card">
+        <div class="card-img-container">
+          <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name">
+        </div>
+        <div class="card-body text-center">
+          <h3 class="card-title">{{ product.name }}</h3>
+          <p class="card-text text-muted">{{ product.description }}</p>
+          <div class="price mb-3">
+            <strong>${{ product.price.toFixed(2) }}</strong>
+          </div>
+          <div class="rating mb-3">
+            <span *ngFor="let star of getStarsArray(product.rating)" class="star">
+              <i class="fas" [ngClass]="star === 1 ? 'fa-star' : 'fa-star-o'"></i>
+            </span>
+          </div>
+          <button class="btn btn-primary buy-now-btn" (click)="buyNow(product)" [disabled]="loadingProductId === product.id">
+            <span *ngIf="loadingProductId !== product.id">Buy Now</span>
+            <span *ngIf="loadingProductId === product.id">
+              <i class="fas fa-spinner fa-spin me-1"></i> Processing...
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

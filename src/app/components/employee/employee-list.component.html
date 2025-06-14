@@ -1,0 +1,149 @@
+<div class="container mt-4">
+  <!-- Alert messages -->
+  <div class="alert alert-{{ alertType }} alert-dismissible fade show" role="alert" *ngIf="showAlert">
+    {{ alertMessage }}
+    <button type="button" class="btn-close" (click)="showAlert = false"></button>
+  </div>
+
+  <!-- Department selection and search -->
+  <div class="card mb-4">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">
+        <i class="fas fa-search me-2"></i>
+        Search Employees
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+          <label for="departmentSelect" class="form-label">Select Department:</label>
+          <select id="departmentSelect" class="form-select" [(ngModel)]="departmentId">
+            <option value="">-- Select Department --</option>
+            <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+          </select>
+          <small class="text-muted">Selected Department ID: {{departmentId}}</small>
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+          <button class="btn btn-primary me-2" (click)="searchEmployees()" [disabled]="loading$ | async">
+            <i class="fas fa-search me-1"></i> Search
+          </button>
+          <button class="btn btn-success" (click)="addNewEmployee()" [disabled]="(loading$ | async) || !departmentId">
+            <i class="fas fa-plus me-1"></i> Add Employee
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employee List -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="fas fa-users me-2"></i>
+        Employee List
+      </h5>
+      <button class="btn btn-sm btn-outline-primary" (click)="generateReport()" [disabled]="(loading$ | async) || employees.length === 0">
+        <i class="fas fa-file-pdf me-1"></i> Generate Report
+      </button>
+    </div>
+    <div class="card-body">
+      <!-- Loading spinner -->
+      <div *ngIf="loading$ | async" class="text-center py-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading data...</p>
+      </div>
+
+      <!-- Employee table -->
+      <div class="table-responsive" *ngIf="!(loading$ | async) && employees.length > 0">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Position</th>
+              <th>Salary</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of employees">
+              <td>{{ employee.id }}</td>
+              <td>{{ employee.name }}</td>
+              <td>{{ employee.email }}</td>
+              <td>{{ employee.position }}</td>
+              <td>{{ employee.salary | currency }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-1" (click)="editEmployee(employee)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="selectedEmployee = employee; deleteEmployee()">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No employees message -->
+      <div *ngIf="!(loading$ | async) && employees.length === 0" class="alert alert-info text-center">
+        <i class="fas fa-info-circle me-2"></i>
+        No employees found. Please select a department and click Search, or add a new employee.
+      </div>
+    </div>
+  </div>
+
+  <!-- Employee Form Modal -->
+  <div class="modal fade show d-block" *ngIf="selectedEmployee" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-user me-2"></i>
+            {{ isAddingNew ? 'Add New Employee' : 'Edit Employee' }}
+          </h5>
+          <button type="button" class="btn-close" (click)="closeEmployeeForm()"></button>
+        </div>
+        <div class="modal-body">
+          <form #employeeForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">ID: <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="selectedEmployee.id" name="id" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Name: <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="selectedEmployee.name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email: <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" [(ngModel)]="selectedEmployee.email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Position: <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="selectedEmployee.position" name="position" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Salary: <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" [(ngModel)]="selectedEmployee.salary" name="salary" required min="0">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeEmployeeForm()">
+            <i class="fas fa-times me-1"></i> Cancel
+          </button>
+          <button type="button" class="btn btn-primary" [disabled]="!employeeForm.form.valid" 
+                  (click)="isAddingNew ? saveNewEmployee() : saveEmployee()">
+            <i class="fas fa-save me-1"></i> Save
+          </button>
+          <button type="button" class="btn btn-danger ms-auto" *ngIf="!isAddingNew" (click)="deleteEmployee()">
+            <i class="fas fa-trash me-1"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
