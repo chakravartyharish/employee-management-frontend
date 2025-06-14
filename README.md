@@ -304,4 +304,4 @@ curl -X POST http://localhost:8080/api/employees/department/dept01 \
 
 ## License
 
-This project is created for educational purposes as part of a coding interview demonstration.
+This project is licensed under the MIT License - see the LICENSE file for details.
