@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+// Import environment but we'll use hardcoded URL for now
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = `${environment.apiUrl}/api/reports`;
+  // Hardcode the Heroku URL to ensure it works regardless of environment
+  private apiUrl = 'https://employee-management-backend-ha.herokuapp.com/api/reports';
+  
+  // Log the API URL being used
+  constructor(private http: HttpClient) {
+    console.log('ReportService using API URL:', this.apiUrl);
+  }
 
-  constructor(private http: HttpClient) { }
+  // Constructor moved above
 
   generateEmployeeReport(): string {
     // Return the URL that will be used to open the PDF in a new tab

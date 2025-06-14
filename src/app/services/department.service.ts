@@ -2,15 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Department } from '../models/department.model';
+// Import environment but we'll use hardcoded URL for now
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartmentService {
-  private apiUrl = `${environment.apiUrl}/api/departments`;
+  // Hardcode the Heroku URL to ensure it works regardless of environment
+  private apiUrl = 'https://employee-management-backend-ha.herokuapp.com/api/departments';
+  
+  // Log the API URL being used
+  constructor(private http: HttpClient) {
+    console.log('DepartmentService using API URL:', this.apiUrl);
+  }
 
-  constructor(private http: HttpClient) { }
+  // Constructor moved above
 
   getAllDepartments(): Observable<Department[]> {
     return this.http.get<Department[]>(this.apiUrl);

@@ -1,15 +1,20 @@
 import { environment } from '../environments/environment';
 
+// Hardcoded Heroku backend URL to ensure consistent testing
+const HEROKU_API_URL = 'https://employee-management-backend-ha.herokuapp.com';
+
 // This function will help debug API connection issues
 export function debugBackendConnection() {
   console.log('%c DEBUG CONNECTION INFO ', 'background: #222; color: #bada55; font-size: 16px;');
   console.log('Current environment:', environment);
   console.log('Production mode:', environment.production);
-  console.log('API URL being used:', environment.apiUrl);
+  console.log('API URL from environment:', environment.apiUrl);
+  console.log('Using hardcoded Heroku URL for testing:', HEROKU_API_URL);
   console.log('Window location:', window.location.href);
   
-  // Test the connection to the backend
-  const apiUrl = `${environment.apiUrl}/api/departments`;
+  // Test the connection to the backend using hardcoded Heroku URL
+  const apiUrl = `${HEROKU_API_URL}/api/departments`;
+  console.log('Testing connection to:', apiUrl);
   console.log('Attempting to connect to:', apiUrl);
   
   // Add CORS headers to the request
