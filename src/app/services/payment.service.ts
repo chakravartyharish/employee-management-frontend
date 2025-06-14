@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
+import { environment } from '../../environments/environment';
 
 interface PaymentResponse {
   sessionId: string;
@@ -14,7 +15,7 @@ interface PaymentResponse {
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8080/api/payments';
+  private apiUrl = `${environment.apiUrl}/api/payments`;
 
   constructor(private http: HttpClient) { }
 
@@ -24,8 +25,8 @@ export class PaymentService {
       productName: product.name,
       amount: product.price,
       currency: 'usd',
-      successUrl: 'http://localhost:4200/payment-success',
-      cancelUrl: 'http://localhost:4200/payment-cancel'
+      successUrl: window.location.origin + '/payment-success',
+      cancelUrl: window.location.origin + '/payment-cancel'
     };
 
     return this.http.post<PaymentResponse>(`${this.apiUrl}/create-checkout-session`, paymentRequest);
