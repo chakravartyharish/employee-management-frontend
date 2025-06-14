@@ -50,7 +50,7 @@ employee-management-system/
 ### Backend
 - **Spring Boot 3.2.0** - Main framework
 - **Spring Data JPA** - Database abstraction
-- **H2 Database** - In-memory database
+- **MySQL Database** - Production-ready relational database
 - **JasperReports** - PDF report generation
 - **Bean Validation** - Input validation
 - **Maven** - Dependency management
@@ -79,15 +79,24 @@ Before running this application, make sure you have the following installed:
    cd backend
    ```
 
-2. **Install dependencies and run:**
+2. **Configure MySQL Database:**
+   - Ensure MySQL Server is installed and running
+   - By default, the application connects to:
+     - URL: `jdbc:mysql://localhost:3306/employee_management`
+     - Username: `root`
+     - Password: `root`
+   - These settings can be modified in `application.properties`
+   - The database will be created automatically if it doesn't exist
+
+3. **Install dependencies and run:**
    ```bash
    mvn clean install
    mvn spring-boot:run
    ```
 
-3. **Verify backend is running:**
+4. **Verify backend is running:**
    - API Base URL: `http://localhost:8080/api`
-   - H2 Console: `http://localhost:8080/h2-console`
+   - MySQL Database: Employee management data stored in MySQL
    - Sample data is automatically loaded on startup
 
 ### Backend Endpoints
